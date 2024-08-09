@@ -3,10 +3,14 @@ import DrawerComponent from "./Drawer";
 
 function Header({ selectedCountries }) {
   return (
-    <div className="flex justify-center">
-      <div className="max-w-[900px] flex gap-[600px] items-center p-12">
-        
-        <a href="/">LOGO</a>
+    <div className="bg-blue-50 py-4">
+      <div className="flex justify-between items-center px-8 bg-white shadow-md rounded-lg p-4">
+        <a
+          href="/"
+          className="text-2xl font-bold text-gray-800 hover:text-blue-500 transition-colors"
+        >
+          LOGO
+        </a>
         <DrawerComponent selectedCountries={selectedCountries} />
       </div>
     </div>

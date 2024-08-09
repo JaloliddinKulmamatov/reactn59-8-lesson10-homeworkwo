@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Carousel, Pagination } from "flowbite-react";
 import { Link } from "react-router-dom";
 
-const PAGE_SIZE = 10; 
+const PAGE_SIZE = 10;
 
 function Home({ updateSelectedCountries }) {
   const [countries, setCountries] = useState([]);
@@ -55,56 +55,78 @@ function Home({ updateSelectedCountries }) {
   );
 
   return (
-    <div>
-      <div className="text-center text-2xl font-bold my-8">
+    <div className="p-8 bg-blue-50 min-h-screen">
+      <h1 className="text-center text-2xl font-bold mb-8">
         Davlatlar ro'yxati
-      </div>
+      </h1>
 
-      <Carousel>
+      <Carousel className="mb-8">
         {selectedCountries.map((country) => (
-          <div key={country.name.common}>
-            <img src={country.flags.svg} alt={`${country.name.common} flag`} />
-            <Link to="/country/countryName">{country.name.common}</Link>
-            <p>{country.population}</p>
+          <div
+            key={country.name.common}
+            className="flex flex-col items-center justify-center space-y-2"
+          >
+            <img
+              className="w-24 h-16 object-contain"
+              src={country.flags.svg}
+              alt={`${country.name.common} flag`}
+            />
+            <Link
+              to={`/country/${country.name.common.toLowerCase()}`}
+              className="text-xl font-medium hover:text-blue-500"
+            >
+              {country.name.common}
+            </Link>
+            <p className="text-sm text-gray-700">
+              {country.population.toLocaleString()} people
+            </p>
           </div>
         ))}
       </Carousel>
 
-      <Table>
-        <Table.Head>
+      <Table className="w-full text-sm text-left text-gray-700 shadow-md">
+        <Table.Head className="bg-blue-500 text-white uppercase">
           <Table.HeadCell>Nomi</Table.HeadCell>
           <Table.HeadCell>Axolisi</Table.HeadCell>
           <Table.HeadCell>Poytaxti</Table.HeadCell>
           <Table.HeadCell>Bayrogi</Table.HeadCell>
           <Table.HeadCell>Tanlash</Table.HeadCell>
         </Table.Head>
-        <Table.Body>
+        <Table.Body className="bg-white">
           {paginatedCountries.map((country) => (
-            <Table.Row key={country.name.common}>
-              <Table.Cell>
-                <Link to={`/country/${country.name.common}`}>
+            <Table.Row
+              key={country.name.common}
+              className="hover:bg-blue-100 transition duration-200"
+            >
+              <Table.Cell className="px-6 py-4 font-medium text-gray-900">
+                <Link
+                  to={`/country/${country.name.common.toLowerCase()}`}
+                  className="hover:text-blue-500"
+                >
                   {country.name.common}
                 </Link>
               </Table.Cell>
-              <Table.Cell>{country.population}</Table.Cell>
-              <Table.Cell>{country.capital}</Table.Cell>
-              <Table.Cell>
+              <Table.Cell className="px-6 py-4">
+                {country.population.toLocaleString()}
+              </Table.Cell>
+              <Table.Cell className="px-6 py-4">{country.capital}</Table.Cell>
+              <Table.Cell className="px-6 py-4">
                 <img
                   src={country.flags.svg}
                   alt={`${country.name.common} flag`}
-                  width="30"
+                  className="w-10 h-7 object-contain"
                 />
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell className="px-6 py-4">
                 <Button
                   onClick={() => handleSelectCountry(country)}
-                  style={{
-                    backgroundColor: selectedCountries.some(
+                  className={`text-white px-3 py-1 rounded-full ${
+                    selectedCountries.some(
                       (selected) => selected.name.common === country.name.common
                     )
-                      ? "#f87171"
-                      : "#6ee7b7",
-                  }}
+                      ? "bg-blue-700 hover:bg-blue-800"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  }`}
                 >
                   {selectedCountries.some(
                     (selected) => selected.name.common === country.name.common
@@ -118,11 +140,12 @@ function Home({ updateSelectedCountries }) {
         </Table.Body>
       </Table>
 
-      <div className="flex justify-center my-4">
+      <div className="flex justify-center mt-8">
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(countries.length / PAGE_SIZE)}
           onPageChange={onPageChange}
+          className="flex space-x-2"
         />
       </div>
     </div>
