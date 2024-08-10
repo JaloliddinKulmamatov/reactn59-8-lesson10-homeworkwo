@@ -60,7 +60,7 @@ function Home({ updateSelectedCountries }) {
         Davlatlar ro'yxati
       </h1>
           <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
-      <Carousel className="bg-white relative z-20mb-8">
+      <Carousel className="bg-blue-900 relative z-20mb-8">
         {selectedCountries.map((country) => (
           <div
             key={country.name.common}
