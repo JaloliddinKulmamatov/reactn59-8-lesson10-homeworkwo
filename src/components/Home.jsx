@@ -59,30 +59,30 @@ function Home({ updateSelectedCountries }) {
       <h1 className="text-center text-2xl font-bold mb-8">
         Davlatlar ro'yxati
       </h1>
-      <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
-        <Carousel className="relative z-20mb-8">
-          {selectedCountries.map((country) => (
-            <div
-              key={country.name.common}
-              className="flex flex-col items-center justify-center space-y-2"
+          <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
+      <Carousel className="bg-white relative z-20mb-8">
+        {selectedCountries.map((country) => (
+          <div
+            key={country.name.common}
+            className="flex flex-col items-center justify-center space-y-2"
+          >
+            <img
+              className="w-24 h-16 object-contain"
+              src={country.flags.svg}
+              alt={`${country.name.common} flag`}
+            />
+            <Link
+              to={`/country/${country.name.common.toLowerCase()}`}
+              className="text-xl font-medium hover:text-blue-500"
             >
-              <img
-                className="w-24 h-16 object-contain"
-                src={country.flags.svg}
-                alt={`${country.name.common} flag`}
-              />
-              <Link
-                to={`/country/${country.name.common.toLowerCase()}`}
-                className="text-xl font-medium hover:text-blue-500"
-              >
-                {country.name.common}
-              </Link>
-              <p className="text-sm text-gray-700">
-                {country.population.toLocaleString()} people
-              </p>
-            </div>
-          ))}
-        </Carousel>
+              {country.name.common}
+            </Link>
+            <p className="text-sm text-gray-700">
+              {country.population.toLocaleString()} people
+            </p>
+          </div>
+        ))}
+      </Carousel>
       </div>
 
       <Table className="w-full text-sm text-left text-gray-700 shadow-md">
