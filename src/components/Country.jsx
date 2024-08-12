@@ -1,59 +1,61 @@
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
 
-const CountryDetails = () => {
-  const { countryName } = useParams();
-  const [country, setCountry] = useState(null);
+function CoinDetails() {
+  const { id } = useParams();
+  const [coin, setCoin] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    async function fetchCountryData() {
+    async function fetchCoinDetails() {
       try {
         const response = await fetch(
-          `https://restcountries.com/v3.1/name/${countryName}`
+          `https://api.coingecko.com/api/v3/coins/${id}`
         );
         if (!response.ok) {
-          throw new Error("Failed to fetch country data");
+          throw new Error("Failed to fetch the coin data");
         }
         const data = await response.json();
-        setCountry(data[0]);
-      } catch (err) {
-        setError(err.message);
+        setCoin(data);
+      } catch (error) {
+        setError(error.message);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchCountryData();
-  }, [countryName]);
+    fetchCoinDetails();
+  }, [id]);
 
-  if (loading) return <div className="text-center py-4">Loading...</div>;
-  if (error)
-    return <div className="text-center py-4 text-red-500">Error: {error}</div>;
-  if (!country)
-    return <div className="text-center py-4">Country not found</div>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-wrap p-6 bg-gray-100 min-h-screen">
-      <div className="w-full md:w-1/3 flex-shrink-0 bg-white p-4 rounded-lg shadow-lg m-4">
+    <div className="p-8 bg-blue-50 min-h-screen">
+      <h1 className="text-center text-3xl font-bold mb-8">
+        {coin.name} Details
+      </h1>
+      <div className="flex flex-col items-center space-y-4">
         <img
-          src={country.flags.svg}
-          alt={`${country.name.common} flag`}
-          className="w-full h-auto rounded-lg mb-4"
+          src={coin.image.large}
+          alt={`${coin.name} logo`}
+          className="w-24 h-24"
         />
-        <h1 className="text-2xl font-bold mb-2">{country.name.common}</h1>
-        <p className="text-lg text-gray-700 mb-2">
-          Currency:{" "}
-          {country.currencies[Object.keys(country.currencies)[0]].name}
+        <p className="text-xl">
+          Current Price: ${coin.market_data.current_price.usd}
         </p>
-        <p className="text-lg text-gray-700">
-          Population: {country.population.toLocaleString()}
+        <p className="text-lg">
+          Market Cap: ${coin.market_data.market_cap.usd.toLocaleString()}
         </p>
+        <p className="text-lg">
+          24h Change: {coin.market_data.price_change_percentage_24h}%
+        </p>
+        <p className="text-lg">Rank: {coin.market_cap_rank}</p>
+        <p className="text-md text-gray-600">{coin.description.en}</p>
       </div>
-
     </div>
   );
-};
+}
 
-export default CountryDetails;
+export default CoinDetails;
