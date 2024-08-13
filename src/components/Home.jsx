@@ -40,6 +40,17 @@ function Home() {
     }
   }, []);
 
+    const chunkProducts = (coins, chunkSize) => {
+      const chunks = [];
+      for (let i = 0; i < coins.length; i += chunkSize) {
+        chunks.push(coins.slice(i, i + chunkSize));
+      }
+      return chunks;
+    };
+
+      const productChunks = chunkProducts(selectedCoins, 4);
+
+
   const handleSelectCoin = (coin) => {
     const isSelected = selectedCoins.some(
       (selected) => selected.id === coin.id
@@ -65,25 +76,29 @@ function Home() {
 
       <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-8">
         <Carousel className="bg-blue-900 relative z-20">
-          {selectedCoins.map((coin) => (
-            <div
-              key={coin.id}
-              className="flex flex-col items-center justify-center space-y-2"
-            >
-              <img
-                className="w-24 h-16 object-contain"
-                src={coin.image}
-                alt={`${coin.name} logo`}
-              />
-              <Link
-                to={`/coin/${coin.id}`}
-                className="text-xl font-medium hover:text-white"
-              >
-                {coin.name}
-              </Link>
-              <p className="text-sm text-white">
-                ${coin.current_price.toLocaleString()}
-              </p>
+          {productChunks.map((coins, index) => (
+            <div key={index} className="grid grid-cols-4 gap-4">
+              {coins.map((coin) => (
+                <div
+                  key={coin.id}
+                  className="flex flex-col items-center justify-center space-y-2"
+                >
+                  <img
+                    className="w-24 h-16 object-contain"
+                    src={coin.image}
+                    alt={`${coin.name} logo`}
+                  />
+                  <Link
+                    to={`/coin/${coin.id}`}
+                    className="text-xl font-medium hover:text-white"
+                  >
+                    {coin.name}
+                  </Link>
+                  <p className="text-sm text-white">
+                    ${coin.current_price.toLocaleString()}
+                  </p>
+                </div>
+              ))}
             </div>
           ))}
         </Carousel>
@@ -116,7 +131,13 @@ function Home() {
                 <Table.Cell className="px-6 py-4">
                   ${coin.current_price.toLocaleString()}
                 </Table.Cell>
-                <Table.Cell className={`px-6 py-4 ${ coin.price_change_24h > 0 ? "text-green-500" : "text-red-500"}`}>
+                <Table.Cell
+                  className={`px-6 py-4 ${
+                    coin.price_change_24h > 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
                   {coin.price_change_24h.toLocaleString()}$
                 </Table.Cell>
                 <Table.Cell className="px-6 py-4">
