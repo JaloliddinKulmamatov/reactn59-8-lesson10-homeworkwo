@@ -1,7 +1,11 @@
+import { useContext } from "react";
 import React from "react";
 import DrawerComponent from "./Drawer";
+import { MyContext } from "./MyContext";
 
-function Header({ selectedCountries }) {
+function Header() {
+    const { selectedCoins } = useContext(MyContext);
+
   return (
     <div className="bg-blue-50 py-4">
       <div className="flex justify-between items-center px-8 bg-white shadow-md rounded-lg p-4">
@@ -11,7 +15,7 @@ function Header({ selectedCountries }) {
         >
           LOGO
         </a>
-        <DrawerComponent selectedCountries={selectedCountries} />
+        <DrawerComponent/>
       </div>
     </div>
   );

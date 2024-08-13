@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Table, Button, Carousel, Pagination } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { MyContext } from "./MyContext";
 
 const PAGE_SIZE = 10;
 
-function Home({ selectedCoins, setSelectedCoins }) {
+function Home() {
+  const { selectedCoins, setSelectedCoins } = useContext(MyContext);
   const [coins, setCoins] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-
   const onPageChange = (page) => setCurrentPage(page);
 
   useEffect(() => {
@@ -89,53 +90,59 @@ function Home({ selectedCoins, setSelectedCoins }) {
       </div>
 
       <Table className="w-full text-sm text-left text-gray-700 shadow-md">
-        <Table.Head className="bg-blue-500 text-white uppercase">
+        <Table.Head className="bg-blue-500 text-black uppercase">
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Market Cap</Table.HeadCell>
           <Table.HeadCell>Current Price</Table.HeadCell>
+          <Table.HeadCell>Price Change (24h)</Table.HeadCell>
           <Table.HeadCell>Logo</Table.HeadCell>
           <Table.HeadCell>Select</Table.HeadCell>
         </Table.Head>
         <Table.Body className="bg-white">
-          {paginatedCoins.map((coin) => (
-            <Table.Row
-              key={coin.id}
-              className="hover:bg-blue-100 transition duration-200"
-            >
-              <Table.Cell className="px-6 py-4 font-medium text-gray-900">
-                <Link to={`/coin/${coin.id}`} className="hover:text-blue-500">
-                  {coin.name}
-                </Link>
-              </Table.Cell>
-              <Table.Cell className="px-6 py-4">
-                ${coin.market_cap.toLocaleString()}
-              </Table.Cell>
-              <Table.Cell className="px-6 py-4">
-                ${coin.current_price.toLocaleString()}
-              </Table.Cell>
-              <Table.Cell className="px-6 py-4">
-                <img
-                  src={coin.image}
-                  alt={`${coin.name} logo`}
-                  className="w-10 h-10 object-contain"
-                />
-              </Table.Cell>
-              <Table.Cell className="px-6 py-4">
-                <Button
-                  onClick={() => handleSelectCoin(coin)}
-                  className={`text-white px-3 py-1 rounded-full ${
-                    selectedCoins.some((selected) => selected.id === coin.id)
-                      ? "bg-blue-700 hover:bg-blue-800"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  }`}
-                >
-                  {selectedCoins.some((selected) => selected.id === coin.id)
-                    ? "Deselect"
-                    : "Select"}
-                </Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
+          {paginatedCoins.map((coin) => {
+            return (
+              <Table.Row
+                key={coin.id}
+                className="hover:bg-blue-100 transition duration-200"
+              >
+                <Table.Cell className="px-6 py-4 font-medium text-gray-900">
+                  <Link to={`/coin/${coin.id}`} className="hover:text-blue-500">
+                    {coin.name}
+                  </Link>
+                </Table.Cell>
+                <Table.Cell className="px-6 py-4">
+                  ${coin.market_cap.toLocaleString()}
+                </Table.Cell>
+                <Table.Cell className="px-6 py-4">
+                  ${coin.current_price.toLocaleString()}
+                </Table.Cell>
+                <Table.Cell className={`px-6 py-4 ${ coin.price_change_24h > 0 ? "text-green-500" : "text-red-500"}`}>
+                  {coin.price_change_24h.toLocaleString()}$
+                </Table.Cell>
+                <Table.Cell className="px-6 py-4">
+                  <img
+                    src={coin.image}
+                    alt={`${coin.name} logo`}
+                    className="w-10 h-10 object-contain"
+                  />
+                </Table.Cell>
+                <Table.Cell className="px-6 py-4">
+                  <Button
+                    onClick={() => handleSelectCoin(coin)}
+                    className={`text-white px-3 py-1 rounded-full ${
+                      selectedCoins.some((selected) => selected.id === coin.id)
+                        ? "bg-blue-700 hover:bg-blue-800"
+                        : "bg-blue-500 hover:bg-blue-600"
+                    }`}
+                  >
+                    {selectedCoins.some((selected) => selected.id === coin.id)
+                      ? "Deselect"
+                      : "Select"}
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
+            );
+          })}
         </Table.Body>
       </Table>
 
