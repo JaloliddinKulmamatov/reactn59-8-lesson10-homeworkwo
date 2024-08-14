@@ -7,15 +7,15 @@ function Header() {
     const { selectedCoins } = useContext(MyContext);
 
   return (
-    <div className="bg-blue-50 py-4">
-      <div className="flex justify-between items-center px-8 bg-white shadow-md rounded-lg p-4">
+    <div className="bg-black">
+      <div className="flex justify-between items-center px-8 bg-gray-900 shadow-md  p-4">
         <a
           href="/"
-          className="text-2xl font-bold text-gray-800 hover:text-blue-500 transition-colors"
+          className="text-2xl font-bold  text-cyan-200	 transition-colors"
         >
-          LOGO
+          CRYPTOFOLIO
         </a>
-        <DrawerComponent/>
+        <DrawerComponent />
       </div>
     </div>
   );

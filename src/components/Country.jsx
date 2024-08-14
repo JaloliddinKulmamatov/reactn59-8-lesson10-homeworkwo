@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import ChartBtns from "./ChartBtn";
 import { useParams } from "react-router-dom";
+import ApexChart from "./ApexChart";
 
 function CoinDetails() {
   const { id } = useParams();
@@ -32,27 +34,28 @@ function CoinDetails() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="p-8 bg-blue-50 min-h-screen">
-      <h1 className="text-center text-3xl font-bold mb-8">
-        {coin.name} Details
-      </h1>
-      <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+      <div className="p-8 lg:w-1/3 bg-gray-900">
+        <h1 className="text-4xl font-bold mb-4">{coin.name}</h1>
         <img
           src={coin.image.large}
           alt={`${coin.name} logo`}
-          className="w-24 h-24"
+          className="w-24 h-24 mb-4"
         />
-        <p className="text-xl">
-          Current Price: ${coin.market_data.current_price.usd}
+        <p className="text-2xl mb-2">Rank: {coin.market_cap_rank}</p>
+        <p className="text-xl mb-2">
+          Current Price: ₹ {coin.market_data.current_price.inr.toLocaleString()}
         </p>
-        <p className="text-lg">
-          Market Cap: ${coin.market_data.market_cap.usd.toLocaleString()}
+        <p className="text-xl mb-4">
+          Market Cap: ₹ {coin.market_data.market_cap.inr.toLocaleString()}M
         </p>
-        <p className="text-lg">
-          24h Change: {coin.market_data.price_change_percentage_24h}%
+        <p className="text-md text-gray-400">
+          {coin.description.en.slice(0, 150)}...
         </p>
-        <p className="text-lg">Rank: {coin.market_cap_rank}</p>
-        <p className="text-md text-gray-600">{coin.description.en}</p>
+      </div>
+      <div className="lg:w-2/3 p-8">
+        <ApexChart />
+        <ChartBtns />
       </div>
     </div>
   );

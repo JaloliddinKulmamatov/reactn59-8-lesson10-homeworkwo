@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Table, Button, Carousel, Pagination } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Table, Carousel, Pagination } from "flowbite-react";
+import { Link } from "react-router-dom"; 
 import { MyContext } from "./MyContext";
-
+import { IoMdEye } from "react-icons/io";
+import debounce from "lodash.debounce"; 
 const PAGE_SIZE = 10;
 
 function Home() {
+  const [search, setSearch] = useState("");
   const { selectedCoins, setSelectedCoins } = useContext(MyContext);
   const [coins, setCoins] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +24,7 @@ function Home() {
       async function fetchCoins() {
         try {
           const response = await fetch(
-            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=false"
+            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false"
           );
           if (!response.ok) {
             throw new Error("Failed to fetch coins");
@@ -40,16 +42,25 @@ function Home() {
     }
   }, []);
 
-    const chunkProducts = (coins, chunkSize) => {
-      const chunks = [];
-      for (let i = 0; i < coins.length; i += chunkSize) {
-        chunks.push(coins.slice(i, i + chunkSize));
-      }
-      return chunks;
-    };
+  const handleSearchChange = debounce((e) => {
+    setSearch(e.target.value);
+  }, 300);
 
-      const productChunks = chunkProducts(selectedCoins, 4);
+  const filteredCoins = coins.filter((coin) =>
+    search.toLowerCase() === ""
+      ? true
+      : coin.name.toLowerCase().includes(search.toLowerCase())
+  );
 
+  const chunkProducts = (coins, chunkSize) => {
+    const chunks = [];
+    for (let i = 0; i < coins.length; i += chunkSize) {
+      chunks.push(coins.slice(i, i + chunkSize));
+    }
+    return chunks;
+  };
+
+  const productChunks = chunkProducts(selectedCoins, 4);
 
   const handleSelectCoin = (coin) => {
     const isSelected = selectedCoins.some(
@@ -63,19 +74,22 @@ function Home() {
     setSelectedCoins(updatedCoins);
   };
 
-  const paginatedCoins = coins.slice(
+  const paginatedCoins = filteredCoins.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
   );
 
   return (
-    <div className="p-8 bg-blue-50 min-h-screen">
-      <h1 className="text-center text-2xl font-bold mb-8">
-        Cryptocurrency List
-      </h1>
+    <div className="p-8 bg-black min-h-screen">
+      <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40">
+        <h1 className="text-center text-6xl font-bold mb-8 text-cyan-200">
+          CRYPTOFOLIO WATCH LIST
+        </h1>
+        <p className="font-medium text-stone-400 text-center mb-11">
+          Get all the Info regarding your favorite Crypto Currency
+        </p>
 
-      <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-8">
-        <Carousel className="bg-blue-900 relative z-20">
+        <Carousel className="bg-gray-900 relative z-20">
           {productChunks.map((coins, index) => (
             <div key={index} className="grid grid-cols-4 gap-4">
               {coins.map((coin) => (
@@ -88,13 +102,15 @@ function Home() {
                     src={coin.image}
                     alt={`${coin.name} logo`}
                   />
-                  <Link
-                    to={`/coin/${coin.id}`}
-                    className="text-xl font-medium hover:text-white"
-                  >
-                    {coin.name}
-                  </Link>
-                  <p className="text-sm text-white">
+                  <span>
+                    <Link
+                      to={`/coin/${coin.id}`}
+                      className="text-xl font-medium hover:text-gray-300 text-white"
+                    >
+                      {coin.symbol.toUpperCase()}
+                    </Link>
+                  </span>
+                  <p className="text-sm text-gray-300">
                     ${coin.current_price.toLocaleString()}
                   </p>
                 </div>
@@ -104,73 +120,74 @@ function Home() {
         </Carousel>
       </div>
 
-      <Table className="w-full text-sm text-left text-gray-700 shadow-md">
-        <Table.Head className="bg-blue-500 text-black uppercase">
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Market Cap</Table.HeadCell>
-          <Table.HeadCell>Current Price</Table.HeadCell>
-          <Table.HeadCell>Price Change (24h)</Table.HeadCell>
-          <Table.HeadCell>Logo</Table.HeadCell>
-          <Table.HeadCell>Select</Table.HeadCell>
+      <Table className="w-full text-sm text-left text-gray-300 shadow-md">
+        <Table.Head className="bg-gray-800 text-white uppercase">
+          <Table.HeadCell className="bg-gray-800">Coin</Table.HeadCell>
+          <Table.HeadCell className="bg-gray-800"></Table.HeadCell>
+          <Table.HeadCell className="bg-gray-800">Price</Table.HeadCell>
+          <Table.HeadCell className="bg-gray-800"></Table.HeadCell>
+          <Table.HeadCell className="bg-gray-800">
+            24h Price Change
+          </Table.HeadCell>
+          <Table.HeadCell className="bg-gray-800">Market Cap</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="bg-white">
-          {paginatedCoins.map((coin) => {
-            return (
-              <Table.Row
-                key={coin.id}
-                className="hover:bg-blue-100 transition duration-200"
-              >
-                <Table.Cell className="px-6 py-4 font-medium text-gray-900">
-                  <Link to={`/coin/${coin.id}`} className="hover:text-blue-500">
-                    {coin.name}
-                  </Link>
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4">
-                  ${coin.market_cap.toLocaleString()}
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4">
-                  ${coin.current_price.toLocaleString()}
-                </Table.Cell>
-                <Table.Cell
-                  className={`px-6 py-4 ${
-                    coin.price_change_24h > 0
-                      ? "text-green-500"
-                      : "text-red-500"
+        <Table.Body className="bg-gray-900">
+          {paginatedCoins.map((coin) => (
+            <Table.Row
+              key={coin.id}
+              className="hover:bg-gray-700 transition duration-200"
+            >
+              <Table.Cell className="px-6 py-4">
+                <img
+                  src={coin.image}
+                  alt={`${coin.name} logo`}
+                  className="w-10 h-10 object-contain"
+                />
+              </Table.Cell>
+              <Table.Cell className="px-6 py-4 font-medium text-white">
+                <Link
+                  to={`/coin/${coin.id}`}
+                  className="hover:text-gray-500 text-xl"
+                >
+                  {coin.symbol.toUpperCase()}
+                </Link>
+                <p>{coin.name}</p>
+              </Table.Cell>
+              <Table.Cell className="px-6 py-4">
+                {coin.current_price.toLocaleString()}$
+              </Table.Cell>
+              <Table.Cell className="px-6 py-4">
+                <button
+                  onClick={() => handleSelectCoin(coin)}
+                  className={`text-white px-3 py-1 rounded-full ${
+                    selectedCoins.some((selected) => selected.id === coin.id)
+                      ? "bg-gray-700"
+                      : "bg-green-500"
                   }`}
                 >
-                  {coin.price_change_24h.toLocaleString()}$
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4">
-                  <img
-                    src={coin.image}
-                    alt={`${coin.name} logo`}
-                    className="w-10 h-10 object-contain"
-                  />
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4">
-                  <Button
-                    onClick={() => handleSelectCoin(coin)}
-                    className={`text-white px-3 py-1 rounded-full ${
-                      selectedCoins.some((selected) => selected.id === coin.id)
-                        ? "bg-blue-700 hover:bg-blue-800"
-                        : "bg-blue-500 hover:bg-blue-600"
-                    }`}
-                  >
-                    {selectedCoins.some((selected) => selected.id === coin.id)
-                      ? "Deselect"
-                      : "Select"}
-                  </Button>
-                </Table.Cell>
-              </Table.Row>
-            );
-          })}
+                  <IoMdEye />
+                </button>
+              </Table.Cell>
+              <Table.Cell
+                className={`px-6 py-4 ${
+                  coin.price_change_24h > 0 ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {coin.price_change_24h.toLocaleString()}$
+              </Table.Cell>
+
+              <Table.Cell className="px-6 py-4">
+                ${coin.market_cap.toLocaleString()}
+              </Table.Cell>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
 
       <div className="flex justify-center mt-8">
         <Pagination
           currentPage={currentPage}
-          totalPages={Math.ceil(coins.length / PAGE_SIZE)}
+          totalPages={Math.ceil(filteredCoins.length / PAGE_SIZE)}
           onPageChange={onPageChange}
           className="flex space-x-2"
         />
