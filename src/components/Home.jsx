@@ -85,9 +85,6 @@ function Home() {
 
   return (
     <div className="p-8 bg-black min-h-screen">
-      <h1 className="text-white text-3xl">
-        Selected {selectedValue.toUpperCase()}
-      </h1>
       <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40">
         <h1 className="text-center text-6xl font-bold mb-8 text-cyan-200">
           CRYPTOFOLIO WATCH LIST
@@ -132,7 +129,7 @@ function Home() {
           type="text"
           placeholder="Search for a coin..."
           onChange={handleSearchChange}
-          className="p-2 w-full max-w-md rounded-lg bg-black"
+          className="p-2 w-full  rounded-lg bg-black text-white"
         />
       </div>
 
@@ -187,10 +184,12 @@ function Home() {
               </Table.Cell>
               <Table.Cell
                 className={`px-6 py-4 ${
-                  coin.price_change_24h > 0 ? "text-green-500" : "text-red-500"
+                  coin.price_change_percentage_24h > 0
+                    ? "text-green-500"
+                    : "text-red-500"
                 }`}
               >
-                {coin.price_change_24h.toLocaleString()}{" "}
+                {coin.price_change_percentage_24h.toLocaleString()}%{" "}
                 {selectedValue.toUpperCase()}
               </Table.Cell>
 
