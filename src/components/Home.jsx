@@ -31,6 +31,9 @@ function Home() {
         if (!response.ok) {
           throw new Error("Failed to fetch coins");
         }
+        if (response.status == 429 ) {
+          alert("Error 429. Too mush request, out of limit!")
+        }
         const data = await response.json();
         setCoins(data);
         localStorage.setItem("cachedCoins", JSON.stringify(data));
