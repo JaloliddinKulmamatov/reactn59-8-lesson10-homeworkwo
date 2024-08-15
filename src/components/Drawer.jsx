@@ -18,12 +18,13 @@ const DrawerComponent = () => {
     <>
       <div>
         <button
-          className="bg-cyan-200 px-5 py-4 text-black"
+          className="bg-cyan-200 px-5 py-4 text-black rounded-sm"
           onClick={handleOpen}
         >
           Watch List
         </button>
       </div>
+
       <Drawer
         className="bg-gray-600  text-white"
         open={isOpen}

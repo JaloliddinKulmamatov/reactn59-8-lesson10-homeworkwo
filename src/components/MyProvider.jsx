@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { MyContext } from "./MyContext"; 
+import { MyContext } from "./MyContext";
 
 function MyProvider({ children }) {
+  const [selectedValue, setSelectedValue] = useState("");
+
   const [selectedCoins, setSelectedCoins] = useState(() => {
     const storedCoins = localStorage.getItem("selectedCoins");
     return storedCoins ? JSON.parse(storedCoins) : [];
@@ -16,7 +18,14 @@ function MyProvider({ children }) {
   }, [selectedCoins]);
 
   return (
-    <MyContext.Provider value={{ selectedCoins, setSelectedCoins }}>
+    <MyContext.Provider
+      value={{
+        selectedCoins,
+        setSelectedCoins,
+        selectedValue,
+        setSelectedValue,
+      }}
+    >
       {children}
     </MyContext.Provider>
   );

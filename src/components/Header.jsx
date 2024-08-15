@@ -1,21 +1,23 @@
-import { useContext } from "react";
-import React from "react";
+import React, { useContext } from "react"; // Make sure to import useContext
 import DrawerComponent from "./Drawer";
-import { MyContext } from "./MyContext";
+import { SelectPrice } from "./SelectPrice";
 
 function Header() {
-    const { selectedCoins } = useContext(MyContext);
 
   return (
     <div className="bg-black">
-      <div className="flex justify-between items-center px-8 bg-gray-900 shadow-md  p-4">
+      <div className="flex justify-between items-center px-8 bg-gray-900 shadow-md p-4">
         <a
           href="/"
-          className="text-2xl font-bold  text-cyan-200	 transition-colors"
+          className="text-2xl font-bold text-cyan-200 transition-colors"
         >
           CRYPTOFOLIO
         </a>
-        <DrawerComponent />
+        <div className="flex items-center gap-9">
+          <SelectPrice />
+
+          <DrawerComponent />
+        </div>
       </div>
     </div>
   );

@@ -44,10 +44,10 @@ function CoinDetails() {
         />
         <p className="text-2xl mb-2">Rank: {coin.market_cap_rank}</p>
         <p className="text-xl mb-2">
-          Current Price: ₹ {coin.market_data.current_price.inr.toLocaleString()}
+          Current Price: $ {coin.market_data.current_price.usd.toLocaleString()}
         </p>
         <p className="text-xl mb-4">
-          Market Cap: ₹ {coin.market_data.market_cap.inr.toLocaleString()}M
+          Market Cap: $ {coin.market_data.market_cap.usd.toLocaleString()}M
         </p>
         <p className="text-md text-gray-400">
           {coin.description.en.slice(0, 150)}...

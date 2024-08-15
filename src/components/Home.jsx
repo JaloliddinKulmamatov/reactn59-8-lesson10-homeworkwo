@@ -1,46 +1,47 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Table, Carousel, Pagination } from "flowbite-react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { MyContext } from "./MyContext";
 import { IoMdEye } from "react-icons/io";
-import debounce from "lodash.debounce"; 
+import debounce from "lodash.debounce";
+
 const PAGE_SIZE = 10;
 
 function Home() {
   const [search, setSearch] = useState("");
-  const { selectedCoins, setSelectedCoins } = useContext(MyContext);
+  const { selectedCoins, setSelectedCoins, selectedValue } =
+    useContext(MyContext);
   const [coins, setCoins] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page) => setCurrentPage(page);
 
   useEffect(() => {
-    const cachedCoins = JSON.parse(localStorage.getItem("cachedCoins"));
-    const cacheTime = localStorage.getItem("cacheTime");
-    const now = new Date().getTime();
+    async function fetchCoins() {
+      try {
+        const currency =
+          selectedValue === "jpy"
+            ? "jpy"
+            : selectedValue === "eur"
+            ? "eur"
+            : "usd";
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=250&page=1&sparkline=false`
+        );
 
-    if (cachedCoins && cacheTime && now - cacheTime < 300000) {
-      setCoins(cachedCoins);
-    } else {
-      async function fetchCoins() {
-        try {
-          const response = await fetch(
-            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false"
-          );
-          if (!response.ok) {
-            throw new Error("Failed to fetch coins");
-          }
-          const data = await response.json();
-          setCoins(data);
-          localStorage.setItem("cachedCoins", JSON.stringify(data));
-          localStorage.setItem("cacheTime", now.toString());
-        } catch (error) {
-          console.error("Error fetching coins:", error);
+        if (!response.ok) {
+          throw new Error("Failed to fetch coins");
         }
+        const data = await response.json();
+        setCoins(data);
+        localStorage.setItem("cachedCoins", JSON.stringify(data));
+        localStorage.setItem("cacheTime", new Date().getTime().toString());
+      } catch (error) {
+        console.error("Error fetching coins:", error);
       }
-
-      fetchCoins();
     }
-  }, []);
+
+    fetchCoins();
+  }, [selectedValue]); 
 
   const handleSearchChange = debounce((e) => {
     setSearch(e.target.value);
@@ -81,6 +82,9 @@ function Home() {
 
   return (
     <div className="p-8 bg-black min-h-screen">
+      <h1 className="text-white text-3xl">
+        Selected {selectedValue.toUpperCase()}
+      </h1>
       <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40">
         <h1 className="text-center text-6xl font-bold mb-8 text-cyan-200">
           CRYPTOFOLIO WATCH LIST
@@ -111,13 +115,22 @@ function Home() {
                     </Link>
                   </span>
                   <p className="text-sm text-gray-300">
-                    ${coin.current_price.toLocaleString()}
+                    {coin.current_price.toLocaleString()}{" "}
+                    {selectedValue.toUpperCase()}
                   </p>
                 </div>
               ))}
             </div>
           ))}
         </Carousel>
+      </div>
+      <div className="mb-8">
+        <input
+          type="text"
+          placeholder="Search for a coin..."
+          onChange={handleSearchChange}
+          className="p-2 w-full max-w-md rounded-lg bg-black"
+        />
       </div>
 
       <Table className="w-full text-sm text-left text-gray-300 shadow-md">
@@ -154,7 +167,8 @@ function Home() {
                 <p>{coin.name}</p>
               </Table.Cell>
               <Table.Cell className="px-6 py-4">
-                {coin.current_price.toLocaleString()}$
+                {coin.current_price.toLocaleString()}{" "}
+                {selectedValue.toUpperCase()}
               </Table.Cell>
               <Table.Cell className="px-6 py-4">
                 <button
@@ -173,11 +187,12 @@ function Home() {
                   coin.price_change_24h > 0 ? "text-green-500" : "text-red-500"
                 }`}
               >
-                {coin.price_change_24h.toLocaleString()}$
+                {coin.price_change_24h.toLocaleString()}{" "}
+                {selectedValue.toUpperCase()}
               </Table.Cell>
 
               <Table.Cell className="px-6 py-4">
-                ${coin.market_cap.toLocaleString()}
+                {coin.market_cap.toLocaleString()} {selectedValue.toUpperCase()}
               </Table.Cell>
             </Table.Row>
           ))}
