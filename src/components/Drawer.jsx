@@ -14,6 +14,10 @@ const DrawerComponent = () => {
     setSelectedCoins(updatedCoins);
   };
 
+  const handleClearAll = () => {
+    setSelectedCoins([]);
+  };
+
   return (
     <>
       <div>
@@ -26,12 +30,12 @@ const DrawerComponent = () => {
       </div>
 
       <Drawer
-        className="bg-gray-600  text-white"
+        className="bg-gray-600 text-white"
         open={isOpen}
         onClose={handleClose}
         position="right"
       >
-        <Drawer.Header  title="WATCHLIST" />
+        <Drawer.Header title="WATCHLIST" />
         <Drawer.Items>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {selectedCoins.length > 0 ? (
@@ -59,6 +63,12 @@ const DrawerComponent = () => {
             )}
           </div>
         </Drawer.Items>
+        <button
+          onClick={handleClearAll}
+          className="mt-4 px-4 py-2 bg-rose-600 text-white"
+        >
+          Clear All
+        </button>
       </Drawer>
     </>
   );

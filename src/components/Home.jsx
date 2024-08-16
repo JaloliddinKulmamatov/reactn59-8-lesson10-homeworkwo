@@ -106,14 +106,16 @@ function Home() {
     <>
       <DarkModeToggle />
       <div className="p-8 bg-white dark:bg-black min-h-screen">
-        <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40">
+        <div
+          className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40"
+          style={{ backgroundImage: `url('/bg.jpeg')` }}
+        >
           <h1 className="text-center text-6xl font-bold mb-8 text-black dark:text-cyan-200">
             CRYPTOFOLIO WATCH LIST
           </h1>
           <p className="font-medium text-gray-700 dark:text-stone-400 text-center mb-11">
             Get all the Info regarding your favorite Crypto Currency
           </p>
-
           <Carousel
             className="bg-gray-200  relative z-20 mb-12"
             style={{ backgroundImage: `url('/bg.jpeg')` }}
@@ -150,7 +152,7 @@ function Home() {
                     <span>
                       <Link
                         to={`/coin/${coin.id}`}
-                        className="text-xl font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
+                        className="text-xl font-medium  text-white  hover:text-gray-300"
                       >
                         {coin.symbol.toUpperCase()}
                       </Link>
