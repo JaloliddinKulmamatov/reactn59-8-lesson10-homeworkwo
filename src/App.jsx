@@ -18,18 +18,20 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route
-            path="/"
-            element={<Home updateSelectedCoins={updateSelectedCoins} />}
-          />
-          <Route path="/coin/:id" element={<CoinDetails />} />
-        </Routes>
-      </div>
-    </Router>
+    <div>
+      <Router>
+        <div className="App  ">
+          <Header />
+          <Routes>
+            <Route
+              path="/"
+              element={<Home updateSelectedCoins={updateSelectedCoins} />}
+            />
+            <Route path="/coin/:id" element={<CoinDetails />} />
+          </Routes>
+        </div>
+      </Router>
+    </div>
   );
 }
 

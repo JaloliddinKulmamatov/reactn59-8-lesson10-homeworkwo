@@ -115,7 +115,7 @@ function Home() {
           </p>
 
           <Carousel
-            className="bg-gray-200 dark:bg-gray-900 relative z-20 mb-12"
+            className="bg-gray-200  relative z-20 mb-12"
             style={{ backgroundImage: `url('/bg.jpeg')` }}
             leftControl={
               <button className=" border-none ">
@@ -133,16 +133,19 @@ function Home() {
             }
           >
             {productChunks.map((coins, index) => (
-              <div key={index} className="grid grid-cols-4 gap-4">
+              <div
+                key={index}
+                className="grid grid-cols-4 gap-4 max-w-screen-xl"
+              >
                 {coins.map((coin) => (
                   <div
                     key={coin.id}
                     className="flex flex-col items-center justify-center space-y-2"
                   >
                     <img
-                      className="w-24 h-16 object-contain"
                       src={coin.image}
                       alt={`${coin.name} logo`}
+                      className="w-24 h-24 mb-4"
                     />
                     <span>
                       <Link
@@ -152,7 +155,7 @@ function Home() {
                         {coin.symbol.toUpperCase()}
                       </Link>
                     </span>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-sm text-gray-300">
                       {coin.current_price.toLocaleString()}{" "}
                       {selectedValue.toUpperCase()}
                     </p>
@@ -162,98 +165,100 @@ function Home() {
             ))}
           </Carousel>
         </div>
-        <div className="mb-8">
-          <h3 className="text-gray-900 dark:text-white flex justify-center text-3xl ">
-            Cryptocurrency Prices by Market Cap
-          </h3>
-          <input
-            type="text"
-            placeholder="Search for a coin..."
-            onChange={handleSearchChange}
-            className="p-2 w-full rounded-lg bg-gray-200 dark:bg-black text-gray-900 dark:text-white mt-8"
-          />
-        </div>
+        <div className=" max-w-screen-xl   mx-auto">
+          <div className="mb-8">
+            <h3 className="text-gray-900 dark:text-white flex justify-center text-3xl ">
+              Cryptocurrency Prices by Market Cap
+            </h3>
+            <input
+              type="text"
+              placeholder="Search for a coin..."
+              onChange={handleSearchChange}
+              className="p-2 w-full rounded-lg bg-gray-200 dark:bg-black text-gray-900 dark:text-white mt-8"
+            />
+          </div>
 
-        <Table className="w-full text-sm text-left text-gray-700 dark:text-gray-300 shadow-md">
-          <Table.Head className="bg-gray-300 dark:bg-gray-800 text-gray-900 dark:text-white uppercase">
-            <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-white py-6">
-              Coin
-            </Table.HeadCell>
-            <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-white py-6"></Table.HeadCell>
-            <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-white py-6">
-              Price
-            </Table.HeadCell>
-            <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-white py-6"></Table.HeadCell>
-            <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-white py-6">
-              24h Price Change
-            </Table.HeadCell>
-            <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-white py-6">
-              Market Cap
-            </Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="bg-gray-100 dark:bg-gray-900">
-            {paginatedCoins.map((coin) => (
-              <Table.Row
-                key={coin.id}
-                className="hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200"
-              >
-                <Table.Cell className="px-6 py-4">
-                  <img
-                    src={coin.image}
-                    alt={`${coin.name} logo`}
-                    className="w-10 h-10 object-contain"
-                  />
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  <Link
-                    to={`/coin/${coin.id}`}
-                    className="hover:text-gray-600 dark:hover:text-gray-500 text-xl"
-                  >
-                    {coin.symbol.toUpperCase()}
-                  </Link>
-                  <p>{coin.name}</p>
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4">
-                  {coin.current_price.toLocaleString()}{" "}
-                  {selectedValue.toUpperCase()}
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4">
-                  <button
-                    onClick={() => handleSelectCoin(coin)}
-                    className="text-white px-3 py-1 rounded-full"
-                  >
-                    {selectedCoins.some(
-                      (selected) => selected.id === coin.id
-                    ) ? (
-                      <img src={RedEye} alt="abc" />
-                    ) : (
-                      <img src={GreenEye} alt="abc" />
-                    )}
-                  </button>
-                </Table.Cell>
-                <Table.Cell
-                  className={`px-6 py-4 ${
-                    coin.price_change_percentage_24h > 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
+          <Table className="w-full text-sm text-left text-gray-700 dark:text-gray-300 shadow-md   ">
+            <Table.Head className="bg-gray-300 dark:bg-gray-800 text-gray-900  uppercase">
+              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6 rounded-none">
+                Coin
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6"></Table.HeadCell>
+              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
+                Price
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6"></Table.HeadCell>
+              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
+                24h Price Change
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
+                Market Cap
+              </Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="bg-gray-100 dark:bg-gray-900">
+              {paginatedCoins.map((coin) => (
+                <Table.Row
+                  key={coin.id}
+                  className="hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200"
                 >
-                  {coin.price_change_percentage_24h.toLocaleString()}%{" "}
-                  {selectedValue.toUpperCase()}
-                </Table.Cell>
-                <Table.Cell className="px-6 py-4">
-                  {coin.market_cap.toLocaleString()}
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-        <div className="flex justify-center mt-8">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(filteredCoins.length / PAGE_SIZE)}
-            onPageChange={onPageChange}
-          />
+                  <Table.Cell className="px-6 py-4">
+                    <img
+                      src={coin.image}
+                      alt={`${coin.name} logo`}
+                      className="w-10 h-10 object-contain"
+                    />
+                  </Table.Cell>
+                  <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                    <Link
+                      to={`/coin/${coin.id}`}
+                      className="hover:text-gray-600 dark:hover:text-gray-500 text-xl"
+                    >
+                      {coin.symbol.toUpperCase()}
+                    </Link>
+                    <p>{coin.name}</p>
+                  </Table.Cell>
+                  <Table.Cell className="px-6 py-4">
+                    {coin.current_price.toLocaleString()}{" "}
+                    {selectedValue.toUpperCase()}
+                  </Table.Cell>
+                  <Table.Cell className="px-6 py-4">
+                    <button
+                      onClick={() => handleSelectCoin(coin)}
+                      className="text-white px-3 py-1 rounded-full"
+                    >
+                      {selectedCoins.some(
+                        (selected) => selected.id === coin.id
+                      ) ? (
+                        <img src={GreenEye} alt="abc" />
+                      ) : (
+                        <img src={RedEye} alt="abc" />
+                      )}
+                    </button>
+                  </Table.Cell>
+                  <Table.Cell
+                    className={`px-6 py-4 ${
+                      coin.price_change_percentage_24h > 0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {coin.price_change_percentage_24h.toLocaleString()}%{" "}
+                    {selectedValue.toUpperCase()}
+                  </Table.Cell>
+                  <Table.Cell className="px-6 py-4">
+                    {coin.market_cap.toLocaleString()}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+          <div className="flex justify-center mt-8">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(filteredCoins.length / PAGE_SIZE)}
+              onPageChange={onPageChange}
+            />
+          </div>
         </div>
       </div>
     </>
