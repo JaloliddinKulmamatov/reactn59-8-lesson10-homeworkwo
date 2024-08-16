@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Drawer } from "flowbite-react";
+import Swal from "sweetalert2";
 import { MyContext } from "./MyContext";
 
 const DrawerComponent = () => {
@@ -10,12 +11,47 @@ const DrawerComponent = () => {
   const handleClose = () => setIsOpen(false);
 
   const handleRemoveCoin = (coinId) => {
-    const updatedCoins = selectedCoins.filter((coin) => coin.id !== coinId);
-    setSelectedCoins(updatedCoins);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedCoins = selectedCoins.filter((coin) => coin.id !== coinId);
+        setSelectedCoins(updatedCoins);
+        Swal.fire({
+          title: "Deleted!",
+          text: "The coin has been removed from your watchlist.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   const handleClearAll = () => {
+Swal.fire({
+  title: "Are you sure?",
+  text: "You won't be able to revert this!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, delete it!",
+}).then((result) => {
+  if (result.isConfirmed) {
     setSelectedCoins([]);
+    Swal.fire({
+      title: "Deleted!",
+      text: "The coin has been removed from your watchlist.",
+      icon: "success",
+    });
+  }
+});
+
   };
 
   return (
