@@ -9,6 +9,10 @@ import Loading from "./Loading";
 import DarkModeToggle from "./DarkMode";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
+ import { ToastContainer, toast } from "react-toastify";
+ import "react-toastify/dist/ReactToastify.css";
+ import GreenEye from "../../public/icons8-eye-64.png";
+ import RedEye from "../../public/icons8-eye-64-red.png";
 
 
 const PAGE_SIZE = 10;
@@ -112,6 +116,7 @@ function Home() {
 
           <Carousel
             className="bg-gray-200 dark:bg-gray-900 relative z-20 mb-12"
+            style={{ backgroundImage: `url('/bg.jpeg')` }}
             leftControl={
               <button className=" border-none ">
                 <FaArrowLeft
@@ -215,13 +220,15 @@ function Home() {
                 <Table.Cell className="px-6 py-4">
                   <button
                     onClick={() => handleSelectCoin(coin)}
-                    className={`text-white px-3 py-1 rounded-full ${
-                      selectedCoins.some((selected) => selected.id === coin.id)
-                        ? "bg-gray-700"
-                        : "bg-green-500"
-                    }`}
+                    className="text-white px-3 py-1 rounded-full"
                   >
-                    <IoMdEye />
+                    {selectedCoins.some(
+                      (selected) => selected.id === coin.id
+                    ) ? (
+                      <img src={RedEye} alt="abc" />
+                    ) : (
+                      <img src={GreenEye} alt="abc" />
+                    )}
                   </button>
                 </Table.Cell>
                 <Table.Cell
