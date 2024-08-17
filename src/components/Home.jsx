@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import { MyContext } from "./MyContext";
 import debounce from "lodash.debounce";
 import DarkModeToggle from "./DarkMode";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import GreenEye from "../../public/icons8-eye-64.png";
-import RedEye from "../../public/icons8-eye-64-red.png";
+import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+ import "react-toastify/dist/ReactToastify.css";
+ import GreenEye from "../../public/icons8-eye-64.png";
+ import RedEye from "../../public/icons8-eye-64-red.png";
 import { Pagination } from "@mui/material";
 
 const PAGE_SIZE = 10;
@@ -17,6 +19,7 @@ function Home() {
     useContext(MyContext);
   const [coins, setCoins] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const onPageChange = (page) => setCurrentPage(page);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -41,8 +44,10 @@ function Home() {
         localStorage.setItem("cachedCoins", JSON.stringify(data));
         localStorage.setItem("cacheTime", new Date().getTime().toString());
       } catch (error) {
-        setError(`${error.message} or 429. Please wait 1 minute and try again`);
-      }
+        setError(
+          `${error.massage} or 429. Please wait 1 minute after try again`
+        );
+      } 
     }
 
     fetchCoins();
@@ -85,7 +90,6 @@ function Home() {
     currentPage * PAGE_SIZE
   );
 
-  const pageCount = Math.ceil(filteredCoins.length / PAGE_SIZE);
 
   if (error) return <p>Error: {error}</p>;
 
@@ -104,10 +108,10 @@ function Home() {
             Get all the Info regarding your favorite Crypto Currency
           </p>
           <Carousel
-            className="bg-gray-200 relative z-20 mb-12"
+            className="bg-gray-200  relative z-20 mb-12"
             style={{ backgroundImage: `url('/bg.jpeg')` }}
             leftControl={
-              <button className="border-none">
+              <button className=" border-none ">
                 <FaArrowLeft
                   style={{ width: "60px", height: "60px", color: "#0ad0f7" }}
                 />
@@ -136,10 +140,11 @@ function Home() {
                       alt={`${coin.name} logo`}
                       className="w-24 h-24 mb-4"
                     />
+
                     <span className="flex items-center ">
                       <Link
                         to={`/coin/${coin.id}`}
-                        className="text-xl font-medium text-white hover:text-gray-300"
+                        className="text-xl font-medium  text-white  hover:text-gray-300"
                       >
                         {coin.symbol.toUpperCase()}
                       </Link>
@@ -150,7 +155,7 @@ function Home() {
                             : "text-red-500"
                         }`}
                       >
-                        {coin.price_change_percentage_24h.toFixed(2)}%
+                        {coin.price_change_percentage_24h.toFixed(2)}
                       </p>
                     </span>
                     <p className="text-sm text-gray-300">
@@ -163,9 +168,9 @@ function Home() {
             ))}
           </Carousel>
         </div>
-        <div className="max-w-screen-xl mx-auto">
+        <div className=" max-w-screen-xl   mx-auto">
           <div className="mb-8">
-            <h3 className="text-gray-900 dark:text-white flex justify-center text-3xl">
+            <h3 className="text-gray-900 dark:text-white flex justify-center text-3xl ">
               Cryptocurrency Prices by Market Cap
             </h3>
             <input
@@ -176,8 +181,8 @@ function Home() {
             />
           </div>
 
-          <Table className="w-full text-sm text-left text-gray-700 dark:text-gray-300 shadow-md">
-            <Table.Head className="bg-gray-300 dark:bg-gray-800 text-gray-900 uppercase">
+          <Table className="w-full text-sm text-left text-gray-700 dark:text-gray-300 shadow-md   ">
+            <Table.Head className="bg-gray-300 dark:bg-gray-800 text-gray-900  uppercase">
               <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6 rounded-none">
                 Coin
               </Table.HeadCell>
@@ -220,13 +225,18 @@ function Home() {
                     {selectedValue.toUpperCase()}
                   </Table.Cell>
                   <Table.Cell className="px-6 py-4">
-                    <img
-                      src={
-                        coin.price_change_percentage_24h > 0 ? GreenEye : RedEye
-                      }
-                      alt="price change indicator"
-                      className="w-10 h-10 object-contain"
-                    />
+                    <button
+                      onClick={() => handleSelectCoin(coin)}
+                      className="text-white px-3 py-1 rounded-full"
+                    >
+                      {selectedCoins.some(
+                        (selected) => selected.id === coin.id
+                      ) ? (
+                        <img src={GreenEye} alt="abc" />
+                      ) : (
+                        <img src={RedEye} alt="abc" />
+                      )}
+                    </button>
                   </Table.Cell>
                   <Table.Cell
                     className={`px-6 py-4 ${
@@ -235,24 +245,25 @@ function Home() {
                         : "text-red-500"
                     }`}
                   >
-                    {coin.price_change_percentage_24h.toFixed(2)}%
+                    {coin.price_change_percentage_24h
+                      .toFixed(2)
+                      .toLocaleString()}
+                    % {selectedValue.toUpperCase()}
                   </Table.Cell>
                   <Table.Cell className="px-6 py-4">
-                    {coin.market_cap.toLocaleString()}{" "}
-                    {selectedValue.toUpperCase()}
+                    {coin.market_cap.toLocaleString()}
                   </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
           </Table>
-          <div className="mt-8 flex justify-center ">
+          <div className="flex justify-center mt-8">
             <Pagination
-              count={pageCount}
+              count={25}
               page={currentPage}
               sx={{
                 "& .MuiPaginationItem-root": {
-                  color: "rgba(135, 206, 235, 1)"
-
+                  color: "rgba(135, 206, 235, 1)",
                 },
               }}
               color="primary"
