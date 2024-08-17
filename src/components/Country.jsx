@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ChartBtns from "./ChartBtn";
 import { useParams } from "react-router-dom";
 import ApexChart from "./ApexChart";
+import Loading from "./Loading";
 
 function CoinDetails() {
   const { id } = useParams();
@@ -21,7 +22,7 @@ function CoinDetails() {
         const data = await response.json();
         setCoin(data);
       } catch (error) {
-        setError(error.message);
+          setError(`${error.massage} or 429. Please wait 1 minute after try again`);
       } finally {
         setLoading(false);
       }
@@ -30,7 +31,7 @@ function CoinDetails() {
     fetchCoinDetails();
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Error: {error}</p>;
 
   return (

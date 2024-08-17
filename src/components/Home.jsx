@@ -25,6 +25,7 @@ function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const onPageChange = (page) => setCurrentPage(page);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function fetchCoins() {
@@ -42,15 +43,13 @@ function Home() {
         if (!response.ok) {
           throw new Error("Failed to fetch coins");
         }
-        if (response.status === 429) {
-          alert("Error 429. Too many requests, out of limit!");
-        }
+
         const data = await response.json();
         setCoins(data);
         localStorage.setItem("cachedCoins", JSON.stringify(data));
         localStorage.setItem("cacheTime", new Date().getTime().toString());
       } catch (error) {
-        console.error("Error fetching coins:", error);
+        setError(`${error.massage} or 429. Please wait 1 minute after try again`);
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -101,6 +100,8 @@ function Home() {
   if (loading) {
     return <Loading />;
   }
+  if (error) return <p>Error: {error}</p>;
+
 
   return (
     <>
@@ -110,10 +111,10 @@ function Home() {
           className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40"
           style={{ backgroundImage: `url('/bg.jpeg')` }}
         >
-          <h1 className="text-center text-6xl font-bold mb-8 text-black dark:text-cyan-200">
+          <h1 className="text-center text-6xl font-bold mb-8 text-cyan-200">
             CRYPTOFOLIO WATCH LIST
           </h1>
-          <p className="font-medium text-gray-700 dark:text-stone-400 text-center mb-11">
+          <p className="font-medium text-stone-400 text-center mb-11">
             Get all the Info regarding your favorite Crypto Currency
           </p>
           <Carousel
@@ -149,13 +150,23 @@ function Home() {
                       alt={`${coin.name} logo`}
                       className="w-24 h-24 mb-4"
                     />
-                    <span>
+
+                    <span className="flex items-center ">
                       <Link
                         to={`/coin/${coin.id}`}
                         className="text-xl font-medium  text-white  hover:text-gray-300"
                       >
                         {coin.symbol.toUpperCase()}
                       </Link>
+                      <p
+                        className={`px-6 py-4 ${
+                          coin.price_change_percentage_24h > 0
+                            ? "text-green-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {coin.price_change_percentage_24h.toFixed(2)}
+                      </p>
                     </span>
                     <p className="text-sm text-gray-300">
                       {coin.current_price.toLocaleString()}{" "}
@@ -244,7 +255,7 @@ function Home() {
                         : "text-red-500"
                     }`}
                   >
-                    {coin.price_change_percentage_24h.toLocaleString()}%{" "}
+                    {coin.price_change_percentage_24h.toFixed(2).toLocaleString()}%{" "}
                     {selectedValue.toUpperCase()}
                   </Table.Cell>
                   <Table.Cell className="px-6 py-4">
