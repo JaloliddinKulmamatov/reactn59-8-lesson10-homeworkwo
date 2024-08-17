@@ -32,27 +32,29 @@ const DrawerComponent = () => {
     });
   };
 
-  const handleClearAll = () => {
-Swal.fire({
-  title: "Are you sure?",
-  text: "You won't be able to revert this!",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "Yes, delete it!",
-}).then((result) => {
-  if (result.isConfirmed) {
-    setSelectedCoins([]);
-    Swal.fire({
-      title: "Deleted!",
-      text: "The coin has been removed from your watchlist.",
-      icon: "success",
-    });
-  }
-});
+const handleClearAll = () => {
+  if (selectedCoins.length === 0) return; 
 
-  };
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      setSelectedCoins([]);
+      Swal.fire({
+        title: "Deleted!",
+        text: "The coin has been removed from your watchlist.",
+        icon: "success",
+      });
+    }
+  });
+};
+
 
   return (
     <>

@@ -1,15 +1,12 @@
-// Home.js
 import React, { useState, useEffect, useContext } from "react";
 import { Table, Carousel, Pagination } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { MyContext } from "./MyContext";
-import { IoMdEye } from "react-icons/io";
 import debounce from "lodash.debounce";
 import Loading from "./Loading";
 import DarkModeToggle from "./DarkMode";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
- import { ToastContainer, toast } from "react-toastify";
  import "react-toastify/dist/ReactToastify.css";
  import GreenEye from "../../public/icons8-eye-64.png";
  import RedEye from "../../public/icons8-eye-64-red.png";
