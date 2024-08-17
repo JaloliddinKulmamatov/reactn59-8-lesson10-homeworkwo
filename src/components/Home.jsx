@@ -3,7 +3,6 @@ import { Table, Carousel, Pagination } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { MyContext } from "./MyContext";
 import debounce from "lodash.debounce";
-import Loading from "./Loading";
 import DarkModeToggle from "./DarkMode";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
@@ -20,7 +19,6 @@ function Home() {
     useContext(MyContext);
   const [coins, setCoins] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const onPageChange = (page) => setCurrentPage(page);
   const [error, setError] = useState(false);
 
@@ -46,12 +44,10 @@ function Home() {
         localStorage.setItem("cachedCoins", JSON.stringify(data));
         localStorage.setItem("cacheTime", new Date().getTime().toString());
       } catch (error) {
-        setError(`${error.massage} or 429. Please wait 1 minute after try again`);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      }
+        setError(
+          `${error.massage} or 429. Please wait 1 minute after try again`
+        );
+      } 
     }
 
     fetchCoins();
@@ -94,11 +90,8 @@ function Home() {
     currentPage * PAGE_SIZE
   );
 
-  if (loading) {
-    return <Loading />;
-  }
-  if (error) return <p>Error: {error}</p>;
 
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <>
@@ -252,8 +245,10 @@ function Home() {
                         : "text-red-500"
                     }`}
                   >
-                    {coin.price_change_percentage_24h.toFixed(2).toLocaleString()}%{" "}
-                    {selectedValue.toUpperCase()}
+                    {coin.price_change_percentage_24h
+                      .toFixed(2)
+                      .toLocaleString()}
+                    % {selectedValue.toUpperCase()}
                   </Table.Cell>
                   <Table.Cell className="px-6 py-4">
                     {coin.market_cap.toLocaleString()}

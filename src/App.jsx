@@ -3,19 +3,18 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Header from "./components/Header"
 import CoinDetails from "./components/Country";
-import { MyContext } from "./components/MyContext";
+import Loading from "./components/Loading";
+
 
 function App() {
-  const { selectedCoins, setSelectedCoins } = useContext(MyContext);
+  const [loading, setLoading] = useState(true);
 
-  const updateSelectedCoins = (coins) => {
-    setSelectedCoins(coins);
-    try {
-      localStorage.setItem("selectedCoins", JSON.stringify(coins));
-    } catch (error) {
-      console.error("Error saving to localStorage:", error);
-    }
-  };
+ setTimeout(() => {
+   setLoading(false);
+ }, 2000);
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>
@@ -25,7 +24,7 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={<Home updateSelectedCoins={updateSelectedCoins} />}
+              element={<Home loading={loading} setLoading={setLoading} />}
             />
             <Route path="/coin/:id" element={<CoinDetails />} />
           </Routes>
