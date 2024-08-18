@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ChartBtns from "./ChartBtn";
 import { useParams } from "react-router-dom";
+import { Accordion } from "flowbite-react";
 import ApexChart from "./ApexChart";
 import Loading from "./Loading";
 
@@ -50,9 +51,16 @@ function CoinDetails() {
         <p className="text-xl mb-4">
           Market Cap: $ {coin.market_data.market_cap.usd.toLocaleString()}M
         </p>
-        <p className="text-md text-gray-400">
-          {coin.description.en.slice(0, 150)}...
-        </p>
+        <Accordion>
+          <Accordion.Panel>
+            <Accordion.Title>Coin Description</Accordion.Title>
+            <Accordion.Content>
+              <p className="text-md text-gray-400">
+                {coin.description.en.slice(0, 150)}...
+              </p>
+            </Accordion.Content>
+          </Accordion.Panel>
+        </Accordion>
       </div>
       <div className="lg:w-2/3 p-8">
         <ApexChart />

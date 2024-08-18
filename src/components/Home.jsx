@@ -94,20 +94,20 @@ function Home() {
       <DarkModeToggle />
       <div className="p-8 bg-white dark:bg-black min-h-screen">
         <motion.div
-          className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40"
+          className="relative h-56 sm:h-64 xl:h-80 2xl:h-96 mb-52"
           style={{ backgroundImage: `url('/bg.jpeg')` }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
         >
-          <h1 className="text-center text-6xl font-bold mb-8 text-cyan-200">
+          <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 text-cyan-200">
             CRYPTOFOLIO WATCH LIST
           </h1>
-          <p className="font-medium text-stone-400 text-center mb-11">
+          <p className="font-medium text-stone-400 text-center mb-6">
             Get all the Info regarding your favorite Crypto Currency
           </p>
           <Carousel
-            className="bg-gray-200 relative z-20 mb-12"
+            className="bg-gray-200 relative z-20"
             style={{ backgroundImage: `url('/bg.jpeg')` }}
             leftControl={
               <motion.button
@@ -116,7 +116,7 @@ function Home() {
                 whileTap={{ scale: 0.9 }}
               >
                 <FaArrowLeft
-                  style={{ width: "60px", height: "60px", color: "#0ad0f7" }}
+                  style={{ width: "40px", height: "40px", color: "#0ad0f7" }}
                 />
               </motion.button>
             }
@@ -127,7 +127,7 @@ function Home() {
                 whileTap={{ scale: 0.9 }}
               >
                 <FaArrowRight
-                  style={{ width: "60px", height: "60px", color: "#0ad0f7" }}
+                  style={{ width: "40px", height: "40px", color: "#0ad0f7" }}
                 />
               </motion.button>
             }
@@ -135,7 +135,7 @@ function Home() {
             {productChunks.map((coins, index) => (
               <motion.div
                 key={index}
-                className="grid grid-cols-4 gap-4 max-w-screen-xl"
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
@@ -150,17 +150,17 @@ function Home() {
                     <img
                       src={coin.image}
                       alt={`${coin.name} logo`}
-                      className="w-24 h-24 mb-4"
+                      className="w-16 h-16 mb-2"
                     />
-                    <span className="flex items-center">
+                    <span className="flex flex-col items-center text-center">
                       <Link
                         to={`/coin/${coin.id}`}
-                        className="text-xl font-medium text-white hover:text-gray-300"
+                        className="text-lg font-medium text-white hover:text-gray-300"
                       >
                         {coin.symbol.toUpperCase()}
                       </Link>
                       <p
-                        className={`px-6 py-4 ${
+                        className={`text-sm ${
                           coin.price_change_percentage_24h > 0
                             ? "text-green-500"
                             : "text-red-500"
@@ -169,7 +169,7 @@ function Home() {
                         {coin.price_change_percentage_24h.toFixed(2)}
                       </p>
                     </span>
-                    <p className="text-sm text-gray-300">
+                    <p className="text-xs text-gray-300">
                       {coin.current_price.toLocaleString()}{" "}
                       {selectedValue.toUpperCase()}
                     </p>
@@ -187,7 +187,7 @@ function Home() {
           transition={{ duration: 1.5 }}
         >
           <div className="mb-8">
-            <h3 className="text-gray-900 dark:text-white flex justify-center text-3xl">
+            <h3 className="text-gray-900 dark:text-white text-2xl sm:text-3xl text-center">
               Cryptocurrency Prices by Market Cap
             </h3>
             <motion.input
@@ -232,30 +232,30 @@ function Home() {
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Table.Cell className="px-6 py-4">
+                    <Table.Cell className="px-4 py-3 sm:px-6 sm:py-4">
                       <img
                         src={coin.image}
                         alt={`${coin.name} logo`}
                         className="w-10 h-10 object-contain"
                       />
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                    <Table.Cell className="px-4 py-3 sm:px-6 sm:py-4 font-medium text-gray-900 dark:text-white">
                       <Link
                         to={`/coin/${coin.id}`}
-                        className="hover:text-gray-600 dark:hover:text-gray-500 text-xl"
+                        className="hover:text-gray-600 dark:hover:text-gray-500 text-lg"
                       >
                         {coin.symbol.toUpperCase()}
                       </Link>
-                      <p>{coin.name}</p>
+                      <p className="text-xs">{coin.name}</p>
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4">
+                    <Table.Cell className="px-4 py-3 sm:px-6 sm:py-4">
                       {coin.current_price.toLocaleString()}{" "}
                       {selectedValue.toUpperCase()}
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4">
+                    <Table.Cell className="px-4 py-3 sm:px-6 sm:py-4">
                       <button
                         onClick={() => handleSelectCoin(coin)}
-                        className="text-white px-3 py-1 rounded-full"
+                        className="text-white px-2 py-1 rounded-full"
                       >
                         {selectedCoins.some(
                           (selected) => selected.id === coin.id
@@ -267,7 +267,7 @@ function Home() {
                       </button>
                     </Table.Cell>
                     <Table.Cell
-                      className={`px-6 py-4 ${
+                      className={`px-4 py-3 sm:px-6 sm:py-4 ${
                         coin.price_change_percentage_24h > 0
                           ? "text-green-500"
                           : "text-red-500"
@@ -278,7 +278,7 @@ function Home() {
                         .toLocaleString()}
                       % {selectedValue.toUpperCase()}
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4">
+                    <Table.Cell className="px-4 py-3 sm:px-6 sm:py-4">
                       {coin.market_cap.toLocaleString()}
                     </Table.Cell>
                   </motion.tr>
@@ -287,20 +287,18 @@ function Home() {
             </Table>
           </motion.div>
           <div className="flex justify-center mt-4">
-            <div className="flex justify-center mt-8">
-              <Pagination
-                count={25}
-                page={currentPage}
-                sx={{
-                  "& .MuiPaginationItem-root": {
-                    color: "rgba(135, 206, 235, 1)",
-                  },
-                }}
-                color="primary"
-                variant="outlined"
-                onChange={(e, page) => setCurrentPage(page)}
-              />
-            </div>
+            <Pagination
+              count={Math.ceil(filteredCoins.length / PAGE_SIZE)}
+              page={currentPage}
+              onChange={(e, page) => setCurrentPage(page)}
+              color="primary"
+              variant="outlined"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "rgba(135, 206, 235, 1)",
+                },
+              }}
+            />
           </div>
         </motion.div>
       </div>
