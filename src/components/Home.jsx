@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import { MyContext } from "./MyContext";
 import debounce from "lodash.debounce";
 import DarkModeToggle from "./DarkMode";
-import { FaArrowLeft } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa";
- import "react-toastify/dist/ReactToastify.css";
- import GreenEye from "../../public/icons8-eye-64.png";
- import RedEye from "../../public/icons8-eye-64-red.png";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import "react-toastify/dist/ReactToastify.css";
+import GreenEye from "../../public/icons8-eye-64.png";
+import RedEye from "../../public/icons8-eye-64-red.png";
 import { Pagination } from "@mui/material";
+import { motion } from "framer-motion";
 
 const PAGE_SIZE = 10;
 
@@ -19,7 +19,6 @@ function Home() {
     useContext(MyContext);
   const [coins, setCoins] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const onPageChange = (page) => setCurrentPage(page);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -44,10 +43,8 @@ function Home() {
         localStorage.setItem("cachedCoins", JSON.stringify(data));
         localStorage.setItem("cacheTime", new Date().getTime().toString());
       } catch (error) {
-        setError(
-          `${error.massage} or 429. Please wait 1 minute after try again`
-        );
-      } 
+        setError(`${error.message} or 429. Please wait 1 minute and try again`);
+      }
     }
 
     fetchCoins();
@@ -90,16 +87,18 @@ function Home() {
     currentPage * PAGE_SIZE
   );
 
-
   if (error) return <p>Error: {error}</p>;
 
   return (
     <>
       <DarkModeToggle />
       <div className="p-8 bg-white dark:bg-black min-h-screen">
-        <div
+        <motion.div
           className="h-56 sm:h-64 xl:h-80 2xl:h-96 mb-40"
           style={{ backgroundImage: `url('/bg.jpeg')` }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         >
           <h1 className="text-center text-6xl font-bold mb-8 text-cyan-200">
             CRYPTOFOLIO WATCH LIST
@@ -108,43 +107,55 @@ function Home() {
             Get all the Info regarding your favorite Crypto Currency
           </p>
           <Carousel
-            className="bg-gray-200  relative z-20 mb-12"
+            className="bg-gray-200 relative z-20 mb-12"
             style={{ backgroundImage: `url('/bg.jpeg')` }}
             leftControl={
-              <button className=" border-none ">
+              <motion.button
+                className="border-none"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
                 <FaArrowLeft
                   style={{ width: "60px", height: "60px", color: "#0ad0f7" }}
                 />
-              </button>
+              </motion.button>
             }
             rightControl={
-              <button className="border-none">
+              <motion.button
+                className="border-none"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
                 <FaArrowRight
                   style={{ width: "60px", height: "60px", color: "#0ad0f7" }}
                 />
-              </button>
+              </motion.button>
             }
           >
             {productChunks.map((coins, index) => (
-              <div
+              <motion.div
                 key={index}
                 className="grid grid-cols-4 gap-4 max-w-screen-xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
               >
                 {coins.map((coin) => (
-                  <div
+                  <motion.div
                     key={coin.id}
                     className="flex flex-col items-center justify-center space-y-2"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <img
                       src={coin.image}
                       alt={`${coin.name} logo`}
                       className="w-24 h-24 mb-4"
                     />
-
-                    <span className="flex items-center ">
+                    <span className="flex items-center">
                       <Link
                         to={`/coin/${coin.id}`}
-                        className="text-xl font-medium  text-white  hover:text-gray-300"
+                        className="text-xl font-medium text-white hover:text-gray-300"
                       >
                         {coin.symbol.toUpperCase()}
                       </Link>
@@ -162,116 +173,136 @@ function Home() {
                       {coin.current_price.toLocaleString()}{" "}
                       {selectedValue.toUpperCase()}
                     </p>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             ))}
           </Carousel>
-        </div>
-        <div className=" max-w-screen-xl   mx-auto">
+        </motion.div>
+
+        <motion.div
+          className="max-w-screen-xl mx-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5 }}
+        >
           <div className="mb-8">
-            <h3 className="text-gray-900 dark:text-white flex justify-center text-3xl ">
+            <h3 className="text-gray-900 dark:text-white flex justify-center text-3xl">
               Cryptocurrency Prices by Market Cap
             </h3>
-            <input
+            <motion.input
               type="text"
               placeholder="Search for a coin..."
               onChange={handleSearchChange}
               className="p-2 w-full rounded-lg bg-gray-200 dark:bg-black text-gray-900 dark:text-white mt-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
             />
           </div>
 
-          <Table className="w-full text-sm text-left text-gray-700 dark:text-gray-300 shadow-md   ">
-            <Table.Head className="bg-gray-300 dark:bg-gray-800 text-gray-900  uppercase">
-              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6 rounded-none">
-                Coin
-              </Table.HeadCell>
-              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6"></Table.HeadCell>
-              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
-                Price
-              </Table.HeadCell>
-              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6"></Table.HeadCell>
-              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
-                24h Price Change
-              </Table.HeadCell>
-              <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
-                Market Cap
-              </Table.HeadCell>
-            </Table.Head>
-            <Table.Body className="bg-gray-100 dark:bg-gray-900">
-              {paginatedCoins.map((coin) => (
-                <Table.Row
-                  key={coin.id}
-                  className="hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200"
-                >
-                  <Table.Cell className="px-6 py-4">
-                    <img
-                      src={coin.image}
-                      alt={`${coin.name} logo`}
-                      className="w-10 h-10 object-contain"
-                    />
-                  </Table.Cell>
-                  <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                    <Link
-                      to={`/coin/${coin.id}`}
-                      className="hover:text-gray-600 dark:hover:text-gray-500 text-xl"
-                    >
-                      {coin.symbol.toUpperCase()}
-                    </Link>
-                    <p>{coin.name}</p>
-                  </Table.Cell>
-                  <Table.Cell className="px-6 py-4">
-                    {coin.current_price.toLocaleString()}{" "}
-                    {selectedValue.toUpperCase()}
-                  </Table.Cell>
-                  <Table.Cell className="px-6 py-4">
-                    <button
-                      onClick={() => handleSelectCoin(coin)}
-                      className="text-white px-3 py-1 rounded-full"
-                    >
-                      {selectedCoins.some(
-                        (selected) => selected.id === coin.id
-                      ) ? (
-                        <img src={GreenEye} alt="abc" />
-                      ) : (
-                        <img src={RedEye} alt="abc" />
-                      )}
-                    </button>
-                  </Table.Cell>
-                  <Table.Cell
-                    className={`px-6 py-4 ${
-                      coin.price_change_percentage_24h > 0
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }`}
+          <motion.div
+            className="overflow-x-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <Table className="w-full text-sm text-left text-gray-700 dark:text-gray-300 shadow-md">
+              <Table.Head className="bg-gray-300 dark:bg-gray-800 text-gray-900 uppercase">
+                <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6 rounded-none">
+                  Coin
+                </Table.HeadCell>
+                <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6"></Table.HeadCell>
+                <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
+                  Price
+                </Table.HeadCell>
+                <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6"></Table.HeadCell>
+                <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
+                  24h Price Change
+                </Table.HeadCell>
+                <Table.HeadCell className="bg-cyan-600 dark:bg-cyan-400 text-gray-900 py-6">
+                  Market Cap
+                </Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="bg-gray-100 dark:bg-gray-900">
+                {paginatedCoins.map((coin) => (
+                  <motion.tr
+                    key={coin.id}
+                    className="hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {coin.price_change_percentage_24h
-                      .toFixed(2)
-                      .toLocaleString()}
-                    % {selectedValue.toUpperCase()}
-                  </Table.Cell>
-                  <Table.Cell className="px-6 py-4">
-                    {coin.market_cap.toLocaleString()}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
-          <div className="flex justify-center mt-8">
-            <Pagination
-              count={25}
-              page={currentPage}
-              sx={{
-                "& .MuiPaginationItem-root": {
-                  color: "rgba(135, 206, 235, 1)",
-                },
-              }}
-              color="primary"
-              variant="outlined"
-              onChange={(e, page) => setCurrentPage(page)}
-            />
+                    <Table.Cell className="px-6 py-4">
+                      <img
+                        src={coin.image}
+                        alt={`${coin.name} logo`}
+                        className="w-10 h-10 object-contain"
+                      />
+                    </Table.Cell>
+                    <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                      <Link
+                        to={`/coin/${coin.id}`}
+                        className="hover:text-gray-600 dark:hover:text-gray-500 text-xl"
+                      >
+                        {coin.symbol.toUpperCase()}
+                      </Link>
+                      <p>{coin.name}</p>
+                    </Table.Cell>
+                    <Table.Cell className="px-6 py-4">
+                      {coin.current_price.toLocaleString()}{" "}
+                      {selectedValue.toUpperCase()}
+                    </Table.Cell>
+                    <Table.Cell className="px-6 py-4">
+                      <button
+                        onClick={() => handleSelectCoin(coin)}
+                        className="text-white px-3 py-1 rounded-full"
+                      >
+                        {selectedCoins.some(
+                          (selected) => selected.id === coin.id
+                        ) ? (
+                          <img src={GreenEye} alt="selected" />
+                        ) : (
+                          <img src={RedEye} alt="not selected" />
+                        )}
+                      </button>
+                    </Table.Cell>
+                    <Table.Cell
+                      className={`px-6 py-4 ${
+                        coin.price_change_percentage_24h > 0
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {coin.price_change_percentage_24h
+                        .toFixed(2)
+                        .toLocaleString()}
+                      % {selectedValue.toUpperCase()}
+                    </Table.Cell>
+                    <Table.Cell className="px-6 py-4">
+                      {coin.market_cap.toLocaleString()}
+                    </Table.Cell>
+                  </motion.tr>
+                ))}
+              </Table.Body>
+            </Table>
+          </motion.div>
+          <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-8">
+              <Pagination
+                count={25}
+                page={currentPage}
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    color: "rgba(135, 206, 235, 1)",
+                  },
+                }}
+                color="primary"
+                variant="outlined"
+                onChange={(e, page) => setCurrentPage(page)}
+              />
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </>
   );
